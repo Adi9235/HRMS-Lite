@@ -79,11 +79,16 @@ class EmployeeService:
     async def create_employee(self, payload: EmployeeCreate) -> Dict:
         now = utc_now()
 
-        # ✅ Normalize input (FIX 1)
         email = payload.email.strip().lower()
         full_name = payload.full_name.strip()
 
-        # ⚠️ KEEPING YOUR SAME LOGIC (only small safety fix)
+        existing_employee = await self.collection.find_one({"email": email})
+        if existing_employee:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Employee with same email already exists."
+            )
+
         count = await self.collection.count_documents({})
         employee_id = f"EMP-{str(count + 1).zfill(3)}"
 
@@ -99,7 +104,6 @@ class EmployeeService:
         try:
             result = await self.collection.insert_one(employee_doc)
         except DuplicateKeyError:
-            # ✅ Clean error (FIX 2)
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="Employee with same email already exists."
