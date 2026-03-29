@@ -101,13 +101,7 @@ class EmployeeService:
             "updated_at": now,
         }
 
-        try:
-            result = await self.collection.insert_one(employee_doc)
-        except DuplicateKeyError:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="Employee with same email already exists."
-            )
+        result = await self.collection.insert_one(employee_doc)
 
         created = await self.collection.find_one({"_id": result.inserted_id})
         return mongo_doc(created)
