@@ -39,7 +39,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         settings.frontend_url,
-        "https://hrms-backend-5r7j.onrender.com"    
+        "https://hrmslite123.netlify.app"    
         ],
     allow_credentials=True,
     allow_methods=["*"],
