@@ -89,8 +89,18 @@ class EmployeeService:
                 detail="Employee with same email already exists."
             )
 
-        count = await self.collection.count_documents({})
-        employee_id = f"EMP-{str(count + 1).zfill(3)}"
+        last_employee = await self.collection.find_one(
+            {},
+            sort=[("employee_id", -1)]
+        )
+
+        if last_employee:
+            last_id = int(last_employee["employee_id"].split("-")[1])
+            next_id = last_id + 1
+        else:
+            next_id = 1
+
+        employee_id = f"EMP-{str(next_id).zfill(3)}"
 
         employee_doc = {
             "employee_id": employee_id,
