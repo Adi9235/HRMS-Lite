@@ -39,7 +39,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         settings.frontend_url,
-        "http://127.0.0.1:5173"    
+        "https://hrms-backend-5r7j.onrender.com"    
         ],
     allow_credentials=True,
     allow_methods=["*"],
